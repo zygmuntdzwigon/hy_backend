@@ -6,11 +6,13 @@ class EventListSerializer(serializers.ModelSerializer):
     owner_logo = serializers.SerializerMethodField()
     owner_name = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
-    # banner = serializers.SerializerMethodField()
+    banner = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'city', 'address', 'date_from', 'date_to','owner_logo', 'owner_name', 'tags']
+        fields = ['id', 'name', 'city', 'address', 'date_from', 'date_to','owner_logo', 'owner_name', 
+        'banner',
+        'tags']
 
 
     def get_banner(self, obj):
