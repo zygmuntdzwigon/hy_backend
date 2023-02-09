@@ -1,28 +1,35 @@
 from rest_framework import serializers
-from .models import Event, Product, UserProfile
-from django.contrib.auth.models import User
+
+from .models import Event, Product, UserProfile, Address
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ('street', 'houseNumber', 'city', 'postalCode')
+
 
 class EventListSerializer(serializers.ModelSerializer):
-    owner_logo = serializers.SerializerMethodField()
-    owner_name = serializers.SerializerMethodField()
+    ownerLogo = serializers.SerializerMethodField()
+    ownerName = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     banner = serializers.SerializerMethodField()
+    address = AddressSerializer()
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'city', 'address', 'date_from', 'date_to','owner_logo', 'owner_name', 
-        'banner',
-        'tags']
-
+        fields = ['id', 'name', 'address', 'dateFrom', 'dateTo', 'ownerLogo', 'ownerName', 'address',
+                  'banner',
+                  'tags']
 
     def get_banner(self, obj):
         return obj.banner.url
 
-    def get_owner_logo(self, obj):
+    def get_ownerLogo(self, obj):
         return UserProfile.objects.get(user=obj.owner).logo.url
 
-    def get_owner_name(self, obj):
-        return UserProfile.objects.get(user=obj.owner).company_name
+    def get_ownerName(self, obj):
+        return UserProfile.objects.get(user=obj.owner).companyName
 
     def get_tags(self, obj):
         return Product.objects.filter(event=obj).values_list('tag', flat=True).distinct()
@@ -31,20 +38,21 @@ class EventListSerializer(serializers.ModelSerializer):
 class ProductDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'quantity', 'collect_from', 'collect_to', 'enabled', 'tag']
+        fields = ['id', 'name', 'quantity', 'collectFrom', 'collectTo', 'enabled', 'tag']
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
     owner_logo = serializers.SerializerMethodField()
     owner_name = serializers.SerializerMethodField()
-    products = ProductDetailsSerializer(many=True) 
+    products = ProductDetailsSerializer(many=True)
+
     # banner = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'city', 'address', 'date_from', 'date_to','owner_logo', 'owner_name', 
-        # 'banner',
-        'products']
+        fields = ['id', 'name', 'city', 'address', 'dateFrom', 'dateTo', 'ownerLogo', 'ownerName',
+                  # 'banner',
+                  'products']
 
     def get_banner(self, obj):
         return obj.banner.url
@@ -62,8 +70,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         fields = [
             'name',
             'quantity',
-            'collect_from',
-            'collect_to',
+            'collectFrom',
+            'collectTo',
             'enabled',
             'tag'
         ]
@@ -74,7 +82,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['name', 'city', 'address','date_from', 'date_to', 'banner', 'products']
+        fields = ['name', 'city', 'address', 'dateFrom', 'dateTo', 'banner', 'products']
 
     def create(self, validated_data):
         products_data = validated_data.pop('products')
@@ -82,4 +90,3 @@ class EventCreateSerializer(serializers.ModelSerializer):
         for product_data in products_data:
             Product.objects.create(event=event, **product_data)
         return event
-    

@@ -1,31 +1,14 @@
 from rest_framework import generics
-from .models import Event, Product
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .serializers import EventListSerializer, EventCreateSerializer, EventDetailsSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import LimitOffsetPagination
-from collections import OrderedDict
+from rest_framework.response import Response
 
-class EventsPaginator(LimitOffsetPagination):
-    last_page_number = None
+from .models import Event
+from .serializers import EventListSerializer, EventCreateSerializer, EventDetailsSerializer
 
-    def paginate_queryset(self, queryset, request, view=None):
-        self.last_page_number = int(queryset.count() / self.get_limit(request))
-        return super().paginate_queryset(queryset, request, view)
-
-    def get_paginated_response(self, data):
-        return Response(OrderedDict([
-            ('count', self.count),
-            ('next', self.get_next_link()),
-            ('previous', self.get_previous_link()),
-            ('results', data),
-            ('lastPage', self.last_page_number)
-        ]))
 
 class EventsListView(generics.ListAPIView):
     serializer_class = EventListSerializer
-    pagination_class = EventsPaginator
 
     def get_queryset(self):
         events = Event.objects.all()
