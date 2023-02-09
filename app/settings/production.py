@@ -1,6 +1,8 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
+
+ALLOWED_HOSTS = ['zygmuntd.eu.pythonanywhere.com', ]
 
 DATABASES = {
     'default': {
@@ -10,3 +12,8 @@ DATABASES = {
         },
     }
 }
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.1/howto/static-files/
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
