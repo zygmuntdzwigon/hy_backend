@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.request import Request
 
 from .models import Event
 from .serializers import EventListSerializer, EventCreateSerializer, EventDetailsSerializer
@@ -47,6 +48,20 @@ class EventCreateView(generics.CreateAPIView):
 class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventDetailsSerializer
     queryset = Event.objects.all()
+
+
+@api_view(['POST'])
+def add_event_banner(request: Request, pk: int):
+    banner = request.FILES['banner']
+    if banner:
+        event = Event.objects.get(id=pk)
+        if event.owner != request.user:
+            return Response(200)
+        if event:
+            event.banner = banner
+            return Response(200)
+        return Response(404)
+    return Response(400)
 
 
 @api_view(['GET'])
