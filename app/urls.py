@@ -17,8 +17,6 @@ from django.contrib import admin
 from django.urls import path
 from api.views import EventsListView, EventCreateView, get_cities, EventDetailsView, add_event_banner
 from rest_framework.authtoken import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +26,4 @@ urlpatterns = [
     path('user/events/', EventCreateView.as_view()),
     path('user/events/<int:pk>/banner', add_event_banner),
     path('user/events/<int:pk>/', EventDetailsView.as_view()),
-] 
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
