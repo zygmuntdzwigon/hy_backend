@@ -56,9 +56,7 @@ class IsOwner(BasePermission):
 class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventDetailsSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        Event.objects.get(id=self.kwargs['pk'])
+    queryset = Event.objects.all()
 
 
 @api_view(['POST'])
