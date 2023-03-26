@@ -85,9 +85,10 @@ class EventCreateSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['name', 'address', 'dateFrom', 'dateTo', 'products']
 
-    # def create(self, validated_data):
-    #     products_data = validated_data.pop('products')
-    #     event = Event.objects.create(**validated_data)
-    #     for product_data in products_data:
-    #         Product.objects.create(event=event, **product_data)
-    #     return event
+    def create(self, validated_data):
+        products_data = validated_data.pop('products')
+        address = Address.objects.create(**validated_data['address'])
+        event = Event.objects.create(address=address, **validated_data)
+        for product_data in products_data:
+            Product.objects.create(event=event, **product_data)
+        return event
