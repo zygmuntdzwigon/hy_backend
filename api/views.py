@@ -54,9 +54,6 @@ class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventDetailsSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-    def get_queryset(self):
-        return Event.objects.get(owner=self.request.user)
-
 
 @api_view(['POST'])
 def add_event_banner(request: Request, pk: int):
