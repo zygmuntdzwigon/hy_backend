@@ -44,8 +44,8 @@ class ProductDetailsSerializer(serializers.ModelSerializer):
 
 class EventDetailsSerializer(serializers.ModelSerializer):
     id = fields.IntegerField(read_only=True)
-    owner_logo = serializers.SerializerMethodField()
-    owner_name = serializers.SerializerMethodField()
+    ownerLogo = serializers.SerializerMethodField()
+    ownerName = serializers.SerializerMethodField()
     products = ProductDetailsSerializer(many=True)
 
     # banner = serializers.SerializerMethodField()
