@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework import fields
 
 from .models import Event, Product, UserProfile, Address
 
@@ -42,6 +43,7 @@ class ProductDetailsSerializer(serializers.ModelSerializer):
 
 
 class EventDetailsSerializer(serializers.ModelSerializer):
+    id = fields.IntegerField(read_only=True)
     owner_logo = serializers.SerializerMethodField()
     owner_name = serializers.SerializerMethodField()
     products = ProductDetailsSerializer(many=True)
