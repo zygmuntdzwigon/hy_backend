@@ -45,7 +45,7 @@ class EventCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        return Event.objects.get(owner=self.request.user)
+        return Event.objects.filter(owner=self.request.user)
 
 
 class IsOwner(BasePermission):
