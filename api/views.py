@@ -37,7 +37,7 @@ class EventsListView(generics.ListAPIView):
         return events
 
 
-class EventCreateView(generics.CreateAPIView):
+class EventCreateView(generics.ListCreateAPIView):
     serializer_class = EventCreateSerializer
     permission_classes = [IsAuthenticated]
 
@@ -55,7 +55,7 @@ class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
-        Event.objects.get(id=self.kwargs['id'])
+        Event.objects.get(id=self.kwargs['pk'])
 
 @api_view(['POST'])
 def add_event_banner(request: Request, pk: int):
