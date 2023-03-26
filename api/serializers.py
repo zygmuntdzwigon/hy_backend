@@ -59,11 +59,11 @@ class EventDetailsSerializer(serializers.ModelSerializer):
     def get_banner(self, obj):
         return obj.banner.url
 
-    def get_owner_logo(self, obj):
+    def get_ownerLogo(self, obj):
         return UserProfile.objects.get(user=obj.owner).logo.url
 
-    def get_owner_name(self, obj):
-        return UserProfile.objects.get(user=obj.owner).company_name
+    def get_ownerName(self, obj):
+        return UserProfile.objects.get(user=obj.owner).companyName
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
