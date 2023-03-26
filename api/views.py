@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.request import Request
 
@@ -45,9 +45,17 @@ class EventCreateView(generics.CreateAPIView):
         serializer.save(owner=self.request.user)
 
 
+class IsOwner(BasePermission):
+    def has_object_permission(self, request, view, obj: Event):
+        return request.user == obj.owner
+
+
 class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventDetailsSerializer
-    queryset = Event.objects.all()
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Event.objects.get(owner=self.request.user)
 
 
 @api_view(['POST'])
