@@ -44,6 +44,9 @@ class EventCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def get_queryset(self):
+        return Event.objects.get(owner=self.request.user)
+
 
 class IsOwner(BasePermission):
     def has_object_permission(self, request, view, obj: Event):
@@ -56,6 +59,7 @@ class EventDetailsView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         Event.objects.get(id=self.kwargs['pk'])
+
 
 @api_view(['POST'])
 def add_event_banner(request: Request, pk: int):
